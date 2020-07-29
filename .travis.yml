@@ -6,9 +6,19 @@ services:
 
 before_install:
   - docker pull centos:7
-
 script:
   - mkdir out
   - docker run -v `pwd`:/root/pgbuild --workdir=/root/pgbuild --name centos7_postgres centos:7 /bin/bash -c "bash build_postgres.bash"
   - docker cp centos7_postgres:/root/pginstall/postgresql-Linux-ppc64le.tar.gz out/
   - docker rm -f centos7_postgres
+
+deploy:
+  provider: releases
+  api_key:
+    secure: ocalYt/rnLT04or0HLb2yjsDyEsnemp82y7xR1cPJ4rO7sKyZTMQ/CmRRVaMl0k0r/jf5V9h9qu5yvUlGWP/ncAQQ0E/BkIO3rHSbXQHHnFvX+8VKjv+EF0NalmOx4/Dx06X8/bQHxnMleADfJuI13SUoNCkPHu8k0QtTFNcKBvV11gT5QHOINXin3wJ7y7YOeh8lsPyxrBPrDyoo/eC5w7pzC/7bqKPOrj/2ZCvhcx0hlIpq9qo4c7AftPE411TPEYCr57xRopXBAbIJCodz7YRCi32bi8XNwhFtigE+l/ZMiVj4QFy89WqJYQ1HIjfT0tBBW4llGjKC3Qv5eQWqbSYwJl11EUhQCTf2jdFO8FjVsdicpfszIW8zwDDDhw5AgJBkd4VrKQUOje+33tffpVLSabf9llDdM3GKow8WyPvjZ4HHE9J4/2HQddvN+wrbL4dnvHZzQ2NLg0D5f5W4FR5ht5wSbCzPasLUFL8hrMwzqyFr1ChYAgAPqBMYFM9hMPPTwacznmjzt+LHt9awsR8+cGBQXjVgcxsp4JgVfAwrGlIE23F1jRq8ACP/KmhDK2P84pmTTSL4O6zL47tRIpOoi6k2vCQzFUGzfW5TPmjwvhBUa0quJmu6NzzntYCNUxrYd5oiLx9MuoabN922RRGdMWn/RMJNJ1/PcWnw0Y=
+  file: out/postgresql-Linux-ppc64le.tar.gz
+  on:
+    repo: amitsadaphule/postgres-ppc64le-bin-factory
+    tags: true
+  skip_cleanup: 'true'
+
