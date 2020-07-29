@@ -1,0 +1,14 @@
+os: linux
+arch: ppc64le
+
+services:
+  - docker
+
+before_install:
+  - docker pull centos:7
+
+script:
+  - mkdir out
+  - docker run -v `pwd`:/root/pgbuild --workdir=/root/pgbuild --name centos7_postgres centos:7 /bin/bash -c "bash build_postgres.bash"
+  - docker cp centos7_postgres:/root/pginstall/postgresql-Linux-ppc64le.tar.gz out/
+  - docker rm -f centos7_postgres
